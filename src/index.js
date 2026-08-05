@@ -1,16 +1,22 @@
-/* The code is importing the necessary modules and values for running a server in a JavaScript
-application. */
+/* El código importa los módulos necesarios y los valores para ejecutar el servidor */
 import 'dotenv/config.js';
 import app from './app.js';
-
 import value from './const/const.js';
 
-/* The code is defining a function called `main` using an immediately invoked function expression
-(IIFE). Inside the function, it creates a server using the `app.listen()` method, which listens for
-incoming requests on a specified port. The port number is determined by the value of
-`value.RUN_PORT` or defaults to 5000 if `value.RUN_PORT` is undefined. */
+/* 
+  Se define la función principal usando un IIFE (Expresión de función ejecutada inmediatamente).
+  Crea el servidor con app.listen() en el puerto definido en las variables de entorno.
+*/
 const main = (() => {
-    const server = app.listen( value.RUN_PORT || 5000 ); //instancia 
-    console.log("Server activo", value.RUN_PORT || 5000);
-    server.timeout = 600000;
+    const port = value.RUN_PORT || 5000;
+    
+    const server = app.listen(port, () => {
+        console.log(`🚀 Servidor activo escuchando en el puerto ${port}`);
+    });
+    
+    /* 
+      OJO CON ESTO: 600000 ms son 10 minutos. 
+      Es un tiempo de espera muy alto para una API REST normal.
+    */
+    server.timeout = 60000; 
 })();

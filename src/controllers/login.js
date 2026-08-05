@@ -5,33 +5,47 @@ import { supabase } from '../database/connection.js';
 // ==========================================
 export const registerUser = async (req, res) => {
   try {
-    const { email, password, nombre } = req.body;
+    const { email, password, username, age, unit_preference } = req.body;
 
-    // Validación básica
-    if (!email || !password) {
+    if (!email || !password || !username) {
       return res.status(400).json({ 
         success: false, 
-        error: 'El email y la contraseña son obligatorios' 
+        error: 'Email, contraseña y nombre de usuario son obligatorios' 
       });
     }
 
-    // Creación del usuario en Supabase Auth
-    const { data, error } = await supabase.auth.signUp({
+    // PASO 1: Crear la cuenta en el sistema de Auth de Supabase
+    const { data: authData, error: authError } = await supabase.auth.signUp({
       email: email,
-      password: password,
-      options: {
-        data: {
-          nombre: nombre // Guarda información extra en la metadata del usuario
-        }
-      }
+      password: password
     });
 
-    if (error) throw error;
+    if (authError) throw authError;
+
+    // PASO 2: Guardar el perfil en TU tabla "users" (la de la imagen)
+    // Usamos el ID generado por el paso 1
+    const { error: profileError } = await supabase
+      .from('users') // El nombre exacto de tu tabla
+      .insert([
+        {
+          id: authData.user.id, // El UUID de Supabase Auth
+          email: email,
+          username: username,
+          age: age || null, // Si no lo envían, queda nulo
+          unit_preference: unit_preference || null
+        }
+      ]);
+
+    if (profileError) {
+      // Si falla la creación del perfil, lo ideal sería avisar
+      console.error("Error al crear perfil:", profileError);
+      throw profileError;
+    }
 
     return res.status(201).json({
       success: true,
       message: 'Usuario registrado exitosamente',
-      user: data.user // Retorna los datos básicos del usuario creado
+      user: authData.user 
     });
 
   } catch (error) {

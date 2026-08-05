@@ -17,13 +17,16 @@
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
+    "express-rate-limit": "^8.6.2",
     "firebase-admin": "^13.4.0",
+    "helmet": "^8.3.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.1",
     "morgan": "^1.10.0",
     "mysql2": "^3.6.5",
     "nodemon": "^3.0.1",
-    "sequelize": "^6.35.1"
+    "sequelize": "^6.35.1",
+    "xss-clean": "^0.1.4"
   },
   "devDependencies": {
     "@playwright/test": "^1.45.1",
