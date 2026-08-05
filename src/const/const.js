@@ -1,33 +1,29 @@
 import dotenv from 'dotenv';
 dotenv.config();
-/* These lines of code are assigning values to constants using the values of environment variables. The
-`process.env` object in Node.js provides access to environment variables. */
+
+/* Configuración general del servidor */
 const SECRET = process.env.SECRET;
 const RUN_PORT = process.env.RUN_PORT;
 const NODE_ENV = process.env.NODE_ENV;
 const STATIC_PATH = process.env.STATIC_PATH;
 
+/* Credenciales de Supabase */
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY;
 
-// BD
-const HOST = process.env.HOST;
-const USER = process.env.USER;
-const PASSWORD = process.env.PASSWORD;
-const DATABASE = process.env.DATABASE;
-
-/* The code is creating an object called `object` and assigning it the values of the constants
-`SECRET`, `NODE_ENV`, `RUN_PORT`, and `STATIC_PATH`. These constants are obtained from environment
-variables using `process.env`. */
+/* 
+  Se crea el objeto con las constantes actuales.
+*/
 const object = {
-    HOST,
-    USER,
     SECRET,
-    NODE_ENV,
-    DATABASE,
     RUN_PORT,
+    NODE_ENV,
     STATIC_PATH,
-    PASSWORD
-}
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+};
 
-Object.freeze(object) //The Object.freeze() static method freezes an object
+// Object.freeze() congela el objeto para que no pueda ser modificado en otra parte del código
+Object.freeze(object);
 
 export default object;

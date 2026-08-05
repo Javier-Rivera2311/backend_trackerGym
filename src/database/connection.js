@@ -1,41 +1,23 @@
-import mysql2 from 'mysql2';
-import values from '../const/const.js';
+import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
 
-/* The `connectionConfig` object is storing the configuration details for connecting to a MySQL
-database. It includes the following properties: */
-const connectionConfig = {
-    host: values.HOST,
-    user: values.USER,
-    password: values.PASSWORD,
-    database: values.DATABASE
-};
-/* The code is creating a connection to a MySQL database using the `mysql2` library. */
-/* Print the host, user, and password */
-console.log('Host:', connectionConfig.host);
-console.log('User:', connectionConfig.user);
-//console.log('Password:', connectionConfig.password);
+// Cargar las variables de entorno (tu archivo .env)
+dotenv.config();
 
-const connection = mysql2.createConnection({
-    host: connectionConfig.host,
-    user: connectionConfig.user,
-    password: connectionConfig.password
-});
+// Obtener las credenciales desde el .env
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_ANON_KEY;
 
-/* The code `connection.query(`CREATE DATABASE IF NOT EXISTS ${connectionConfig.database}`, (error) =>
-{ ... })` is executing a SQL query to create a database if it does not already exist. */
-connection.query(`CREATE DATABASE IF NOT EXISTS ${connectionConfig.database}`, (error) => {
-    if (error) {
-      console.error('Error al crear la base de datos: ', error);
-      return;
-    }
-  
-    console.log('Base de datos creada o ya existente');
-  
-    // Conectar a la base de datos
-    connectionConfig.database = connectionConfig.database;
-  
-    // Cerrar la conexión temporal
-    connection.end();
-});
+/*
+  Validación de seguridad opcional:
+  Asegura que el servidor no arranque si faltan las credenciales
+*/
+if (!supabaseUrl || !supabaseKey) {
+    console.error('Error: Faltan las credenciales de Supabase en el archivo .env');
+    process.exit(1);
+}
 
-export default connectionConfig;
+// Crear y exportar el cliente de conexión
+export const supabase = createClient(supabaseUrl, supabaseKey);
+
+console.log('✅ Cliente de Supabase inicializado correctamente.');
